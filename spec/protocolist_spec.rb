@@ -21,6 +21,12 @@ describe Protocolist do
     expect {Protocolist.fire :alarm}.not_to change{Action.count}
     expect {Protocolist.fire :alarm}.not_to raise_error
   end
+
+  it 'should silently skip saving if action_class is falsy' do
+    Protocolist.action_class = nil
+    expect {Protocolist.fire :alarm}.not_to change{Action.count}
+    expect {Protocolist.fire :alarm}.not_to raise_error
+  end
   
   it 'should save a simple record' do
     expect {Protocolist.fire :alarm}.to change{Action.count}.by 1
