@@ -67,7 +67,7 @@ The most flexible way is to use `fire` method:
 ```ruby
 def destroy_projects
     self.projects.destroy_all
-    fire :destroy_all, :data => {:company_id => company}
+    fire :destroy_all, :data => {:company_id => company_id}
 end
 ```
 
