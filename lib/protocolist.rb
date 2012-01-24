@@ -4,7 +4,6 @@ module Protocolist
 
   def self.fire type, options={}
     options = {:actor => @@actor, :type => type}.merge options
-    
     @@action_class.create options if options[:actor] && @@action_class
   end
   
