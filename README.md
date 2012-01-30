@@ -1,8 +1,7 @@
 Protocolist
 ===========
 
-Simple and yet flexible Activity feeds solution for Rails
-applications.
+Simple and flexible Activity feeds solution for Rails applications.
 
 Installation
 ------------
@@ -23,7 +22,7 @@ Getting started
 ---------------
 
 Activity model has four attributes: subject("who did it"), type("what
-they did"), object("what they did it to") and data("additional information"). Subject will be
+they did"), object("what they did it to") and data(additional information). Subject will be
 set as current user by default.
 
 Protocolist expects you to have `current_user` action in a controller.
@@ -70,7 +69,7 @@ def destroy_projects
 end
 ```
 
-If you run without `:object` option set, it will set it as `self`.
+If you run without `:object` option set, it will set as `self`.
 
 Usage in controllers
 --------------------
