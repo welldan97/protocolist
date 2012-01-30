@@ -13,7 +13,7 @@ Add the gem to your Gemfile and run the `bundle install` command to install it.
 gem "protocolist"
 ```
 
-Run the generator to create Action model and migration.
+Run the generator to create Activity model and migration.
 
 ```ruby
 rails generate protocolist:install
@@ -22,10 +22,9 @@ rails generate protocolist:install
 Getting started
 ---------------
 
-Action model has three attributes: actor, type and data. Actor will be
-set as current user. Type is used to distinguish actions
-between each other. And data attribute stores a serialization of
-additional information.
+Activity model has four attributes: subject("who did it"), type("what
+they did"), object("what they did it to") and data("additional information"). Subject will be
+set as current user by default.
 
 Protocolist expects you to have `current_user` action in a controller.
 See Changing Defaults to change this behavior.
@@ -40,8 +39,8 @@ fires :create
 ```
 
 And when create event will be triggered,  it will automatically create
-Action model with current user set as actor, `:create` as type, and
-model id as data.
+Action model with current user set as subject, `:create` as type,
+`self` as object and empty data.
 
 The more convenient usage:
 
@@ -59,7 +58,7 @@ The `unless` option also can be passed.
 The `on` option can also be an array:
 
 ```ruby
-fires :comment_action, :on => [:create, :update, :destroy]
+fires :comment_activity, :on => [:create, :update, :destroy]
 ```
 
 The most flexible way is to use `fire` method:
@@ -67,9 +66,11 @@ The most flexible way is to use `fire` method:
 ```ruby
 def destroy_projects
     self.projects.destroy_all
-    fire :destroy_all, :data => {:company_id => company_id}
+    fire :destroy_all, :object => false, :data => {:company_id => company_id}
 end
 ```
+
+If you run without `:object` option set, it will set it as `self`.
 
 Usage in controllers
 --------------------
@@ -90,9 +91,8 @@ fires :download, :on => [:download_report, :download_file, :download_map],
                  :if => lambda{ response.status == 200 }
 ```
 
-The `fire` method can be used as in models, and also if type is not
-set, it will be set as `action_name`, and data will try to store
-`@model_name`.
+The `fire` method can be used same way as in models, but also if type is not
+set, it will be set as `action_name`, and object will try to store `@model_name`.
 
 ```ruby
 def show
@@ -105,6 +105,6 @@ is the same as
 ```ruby
 def show
     @article = Article.find(params[:id])
-    fire :show, data => @article
+    fire :show, :object => @article
 end
 ```
