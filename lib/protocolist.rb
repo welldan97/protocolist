@@ -1,4 +1,5 @@
 require "protocolist/version"
+require "protocolist/model_additions"
 
 module Protocolist
   
