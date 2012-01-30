@@ -4,48 +4,51 @@ class User < SuperModel::Base
   
 end
 
-class Action < SuperModel::Base
-  
+class Activity < SuperModel::Base
+
 end
 
 describe Protocolist do
   before :each do
-    Action.destroy_all
-    @actor = User.new(:name => 'Bill')
-    Protocolist.actor = @actor
-    Protocolist.action_class = Action
+    Activity.destroy_all
+    @subject = User.new(:name => 'Bill')
+    Protocolist.subject = @subject
+    Protocolist.activity_class = Activity
   end
   
-  it 'should silently skip saving if actor is falsy' do
-    Protocolist.actor = nil
-    expect {Protocolist.fire :alarm}.not_to change{Action.count}
+  it 'should silently skip saving if subject is falsy' do
+    Protocolist.subject = nil
+    expect {Protocolist.fire :alarm}.not_to change{Activity.count}
     expect {Protocolist.fire :alarm}.not_to raise_error
   end
-
-  it 'should silently skip saving if action_class is falsy' do
-    Protocolist.action_class = nil
-    expect {Protocolist.fire :alarm}.not_to change{Action.count}
+  
+  it 'should silently skip saving if activity_class is falsy' do
+    Protocolist.activity_class = nil
+    expect {Protocolist.fire :alarm}.not_to change{Activity.count}
     expect {Protocolist.fire :alarm}.not_to raise_error
   end
   
   it 'should save a simple record' do
-    expect {Protocolist.fire :alarm}.to change{Action.count}.by 1
+    expect {Protocolist.fire :alarm}.to change{Activity.count}.by 1
     
-    Action.last.actor.should == @actor
-    Action.last.type.should == :alarm
+    Activity.last.subject.should == @subject
+    Activity.last.type.should == :alarm
   end
   
   it 'should save a complex record' do
-    another_actor = User.new(:name => 'Bob')
+    another_subject = User.new(:name => 'Bob')
+    object = User.new(:name => 'Mary')
     
     expect {
       Protocolist.fire :alarm,
-      :actor => another_actor,
+      :subject => another_subject,
+      :object => object,
       :data => {:some_attr => :some_data}
-    }.to change{Action.count}.by 1
+    }.to change{Activity.count}.by 1
     
-    Action.last.actor.name.should == 'Bob'
-    Action.last.type.should == :alarm
-    Action.last.data[:some_attr].should == :some_data
+    Activity.last.subject.name.should == 'Bob'
+    Activity.last.type.should == :alarm
+    Activity.last.object.name.should == 'Mary'
+    Activity.last.data[:some_attr].should == :some_data
   end
 end

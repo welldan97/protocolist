@@ -1,25 +1,25 @@
 require "protocolist/version"
 
 module Protocolist
-
+  
   def self.fire type, options={}
-    options = {:actor => @@actor, :type => type}.merge options
-    @@action_class.create options if options[:actor] && @@action_class
+    options = {:subject => @@subject, :type => type}.merge options
+    @@activity_class.create options if options[:subject] && @@activity_class
   end
   
-  def self.actor
-    @@actor
+  def self.subject
+    @@subject
   end
   
-  def self.actor= actor
-    @@actor = actor
+  def self.subject= subject
+    @@subject = subject
   end
   
-  def self.action_class
-    @@action_class
+  def self.activity_class
+    @@activity_class
   end
   
-  def self.action_class= action_class
-    @@action_class = action_class
+  def self.activity_class= activity_class
+    @@activity_class = activity_class
   end
 end

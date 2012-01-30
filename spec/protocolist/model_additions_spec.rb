@@ -4,7 +4,7 @@ class User < SuperModel::Base
   
 end
 
-class Action < SuperModel::Base
+class Activity < SuperModel::Base
   
 end
 
