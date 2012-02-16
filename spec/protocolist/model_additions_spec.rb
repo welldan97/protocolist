@@ -104,8 +104,21 @@ describe Protocolist::ModelAdditions do
     end
     
     it 'saves record when called with complex options' do
+
+      #first create record
+
       expect {
           ComplexFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 1
+      Activity.last.subject.name.should == 'Bill'
+      Activity.last.type.should == :yohoho
+      Activity.last.object.should_not be
+      Activity.last.data.should == 'Hi!'
+      
+      #then destroy record
+      
+      expect {
+        ComplexFirestarter.last.destroy
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.type.should == :yohoho
