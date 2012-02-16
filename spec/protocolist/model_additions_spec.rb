@@ -31,13 +31,18 @@ class SimpleFirestarter < SuperModel::Base
   fires :create
 end
 
-class UselessFirestarter < SuperModel::Base
+class ConditionalFirestarter < SuperModel::Base
   include Protocolist::ModelAdditions
   
-  fires :create, :if => :return_false_please
+  fires :i_will_be_saved, :on => :create, :if => :return_true_please
+  fires :and_i_won_t, :on => :create, :if => :return_false_please
   
   def return_false_please
     false
+  end
+  
+  def return_true_please
+    true
   end
 end
 
@@ -93,7 +98,7 @@ describe Protocolist::ModelAdditions do
     end
   end
   
-  describe 'fires callback', :focus do
+  describe 'fires callback' do
     it 'saves record when called with minimal options' do
       expect {
         SimpleFirestarter.create(:name => 'Ted')
@@ -104,9 +109,9 @@ describe Protocolist::ModelAdditions do
     end
     
     it 'saves record when called with complex options' do
-
+      
       #first create record
-
+      
       expect {
           ComplexFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
@@ -125,6 +130,15 @@ describe Protocolist::ModelAdditions do
       Activity.last.object.should_not be
       Activity.last.data.should == 'Hi!'
     end
+    
+    it 'saves checks conditions' do
+      expect {
+        ConditionalFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 1
+      Activity.last.type.should == :i_will_be_saved
+    end
   end
+  
+
 end
 
