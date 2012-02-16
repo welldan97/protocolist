@@ -16,7 +16,7 @@ module Protocolist
         
         callback_proc = lambda{|record|
           if data_proc
-            fire type, options.merge({:data => data_proc.call(record)})
+            fire type, options.reject{|k,v|:on == k }.merge({:data => data_proc.call(record)})
           else
             fire type, options
           end
