@@ -25,16 +25,45 @@ class Firestarter < SuperModel::Base
   end
 end
 
+class SimpleFirestarter < SuperModel::Base
+  include Protocolist::ModelAdditions
+  
+  fires :create
+end
+
+class UselessFirestarter < SuperModel::Base
+  include Protocolist::ModelAdditions
+  
+  fires :create, :if => :return_false_please
+  
+  def return_false_please
+    false
+  end
+end
+
+class ComplexFirestarter < SuperModel::Base
+  include Protocolist::ModelAdditions
+  
+  fires :yohoho, :on =>[:create, :destroy], :object => false, :data => :hi
+  
+  def hi
+    'Hi!'
+  end
+end
+
 describe Protocolist::ModelAdditions do
   before :each do
     Activity.destroy_all
     @subject = User.new(:name => 'Bill')
     Protocolist.subject = @subject
     Protocolist.activity_class = Activity
-    @firestarter = Firestarter.new
   end
   
   describe 'direct fire method call' do
+    before :each do
+      @firestarter = Firestarter.new
+    end
+    
     it 'saves record with object and data' do
       expect {
         @firestarter.love_letter_for_mary
@@ -64,8 +93,25 @@ describe Protocolist::ModelAdditions do
     end
   end
   
-  describe 'fire callbacks' do
+  describe 'fires callback', :focus do
+    it 'saves record when called with minimal options' do
+      expect {
+        SimpleFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 1
+      Activity.last.subject.name.should == 'Bill'
+      Activity.last.type.should == :create
+      Activity.last.object.name.should == 'Ted'
+    end
     
+    it 'saves record when called with complex options' do
+      expect {
+          ComplexFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 1
+      Activity.last.subject.name.should == 'Bill'
+      Activity.last.type.should == :yohoho
+      Activity.last.object.should_not be
+      Activity.last.data.should == 'Hi!'
+    end
   end
 end
-  
+
