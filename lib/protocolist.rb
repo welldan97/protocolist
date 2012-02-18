@@ -1,7 +1,6 @@
 require "protocolist/version"
 require "protocolist/model_additions"
 require "protocolist/controller_additions"
-require 'action_controller'
 
 
 module Protocolist
