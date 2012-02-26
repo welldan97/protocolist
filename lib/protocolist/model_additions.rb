@@ -3,38 +3,38 @@ module Protocolist
     module ClassMethods
       def fires type, options={}
         #options normalization
-        options[:on] ||= type
-        
+        fires_on = Array(options[:on] || type)
+
         data_proc = if options[:data].respond_to?(:call)
-                      # OPTIMIZE: AFAIK instance_eval is evil
-                      lambda{|record| record.instance_eval{ options[:data].call } }
+                      lambda{|record| options[:data].call(record)}
                     elsif options[:data].class == Symbol
                       lambda{|record| record.send(options[:data]) }
+                    else
+                      lambda{|record| options[:data] }
                     end
-        
-        options_for_callback = options.reject{|k,v| [:on, :data, :subject, :object].include? k }
-        
+
+        options_for_callback = options.select{|k,v| [:if, :unless].include? k }
+
+        options_for_fire = options.reject{|k,v| [:if, :unless, :on].include? k }
+
         callback_proc = lambda{|record|
-          if data_proc
-            fire type, options.reject{|k,v|:on == k }.merge({:data => data_proc.call(record)})
-          else
-            fire type, options
-          end
+          record.fire type, options_for_fire.merge({:data => data_proc.call(record)})
         }
-        
-        Array(options[:on]).each do |on|
+
+        fires_on.each do |on|
           send("after_#{on.to_s}".to_sym, callback_proc, options_for_callback)
         end
       end
     end
-    
+
     def self.included base
       base.extend ClassMethods
     end
-    
+
     def fire type, options={}
       options[:object] = self if options[:object] == nil
       options[:object] = nil if options[:object] == false
+
       Protocolist.fire type, options
     end
   end
