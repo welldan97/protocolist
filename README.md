@@ -31,7 +31,7 @@ See Changing Defaults to change this behavior.
 Usage in models
 ---------------
 
-The simplest way is to just write inside your model.
+The simplest way is just to write inside your model.
 
 ```ruby
 fires :create
@@ -54,7 +54,7 @@ option represent a method, else types will be stored as is.
 
 The `unless` option also can be passed.
 
-The `on` option can also be an array:
+The `on` option can be an array:
 
 ```ruby
 fires :comment_activity, :on => [:create, :update, :destroy]
