@@ -85,7 +85,7 @@ which will strike after download action.
 The customized one:
 
 ```ruby
-fires :download, :on => [:download_report, :download_file, :download_map],
+fires :download, :only => [:download_report, :download_file, :download_map],
                  :data => lambda{ params[:city] },
                  :if => lambda{ response.status == 200 }
 ```
