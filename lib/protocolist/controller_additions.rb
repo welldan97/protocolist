@@ -1,9 +1,9 @@
 module Protocolist
   module ControllerAdditions
     module ClassMethods
-      def fires type, options={}
+      def fires activity_type, options={}
         #options normalization
-        options[:only] ||= type unless options[:except]
+        options[:only] ||= activity_type unless options[:except]
 
         data_proc = if options[:data].respond_to?(:call)
                       lambda{|controller| options[:data].call(controller)}
@@ -18,7 +18,7 @@ module Protocolist
         options_for_fire = options.reject{|k,v| [:if, :unless, :only, :except].include? k }
 
         callback_proc = lambda{|controller|
-          controller.fire type, options.merge({:data => data_proc.call(controller)})
+          controller.fire activity_type, options.merge({:data => data_proc.call(controller)})
         }
 
         send(:after_filter, callback_proc, options_for_callback)
@@ -34,12 +34,12 @@ module Protocolist
       base.extend ClassMethods
     end
 
-    def fire type=nil, options={}
+    def fire activity_type=nil, options={}
       options[:object] =  instance_variable_get("@#{self.controller_name.singularize}") if options[:object] == nil
       options[:object] = nil if options[:object] == false
-      type ||= action_name.to_sym
+      activity_type ||= action_name.to_sym
 
-      Protocolist.fire type, options
+      Protocolist.fire activity_type, options
     end
 
     def initilize_protocolist

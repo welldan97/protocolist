@@ -27,7 +27,7 @@ rake db:migrate
 Getting started
 ---------------
 
-Activity model has four attributes: subject("who did it"), type("what
+Activity model has four attributes: subject("who did it"), activity_type("what
 they did"), object("what they did it to") and data(additional information). Subject will be
 set as current user by default.
 

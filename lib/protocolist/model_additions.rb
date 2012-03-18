@@ -1,9 +1,9 @@
 module Protocolist
   module ModelAdditions
     module ClassMethods
-      def fires type, options={}
+      def fires activity_type, options={}
         #options normalization
-        fires_on = Array(options[:on] || type)
+        fires_on = Array(options[:on] || activity_type)
 
         data_proc = if options[:data].respond_to?(:call)
                       lambda{|record| options[:data].call(record)}
@@ -18,7 +18,7 @@ module Protocolist
         options_for_fire = options.reject{|k,v| [:if, :unless, :on].include? k }
 
         callback_proc = lambda{|record|
-          record.fire type, options_for_fire.merge({:data => data_proc.call(record)})
+          record.fire activity_type, options_for_fire.merge({:data => data_proc.call(record)})
         }
 
         fires_on.each do |on|
@@ -31,11 +31,11 @@ module Protocolist
       base.extend ClassMethods
     end
 
-    def fire type, options={}
+    def fire activity_type, options={}
       options[:object] = self if options[:object] == nil
       options[:object] = nil if options[:object] == false
 
-      Protocolist.fire type, options
+      Protocolist.fire activity_type, options
     end
   end
 end

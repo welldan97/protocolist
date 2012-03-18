@@ -74,7 +74,7 @@ describe Protocolist::ModelAdditions do
         @firestarter.love_letter_for_mary
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :love_letter
+      Activity.last.activity_type.should == :love_letter
       Activity.last.object.name.should == 'Mary'
       Activity.last.data.should == '<3 <3 <3'
     end
@@ -84,7 +84,7 @@ describe Protocolist::ModelAdditions do
         @firestarter.myself
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :myself
+      Activity.last.activity_type.should == :myself
       Activity.last.object.should == @firestarter
     end
 
@@ -93,7 +93,7 @@ describe Protocolist::ModelAdditions do
         @firestarter.delete
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :delete
+      Activity.last.activity_type.should == :delete
       Activity.last.object.should be_false
     end
   end
@@ -104,7 +104,7 @@ describe Protocolist::ModelAdditions do
         SimpleFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :create
+      Activity.last.activity_type.should == :create
       Activity.last.object.name.should == 'Ted'
     end
 
@@ -116,7 +116,7 @@ describe Protocolist::ModelAdditions do
           ComplexFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :yohoho
+      Activity.last.activity_type.should == :yohoho
       Activity.last.object.should_not be
       Activity.last.data.should == 'Hi!'
 
@@ -126,7 +126,7 @@ describe Protocolist::ModelAdditions do
         ComplexFirestarter.last.destroy
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :yohoho
+      Activity.last.activity_type.should == :yohoho
       Activity.last.object.should_not be
       Activity.last.data.should == 'Hi!'
     end
@@ -135,7 +135,7 @@ describe Protocolist::ModelAdditions do
       expect {
         ConditionalFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
-      Activity.last.type.should == :i_will_be_saved
+      Activity.last.activity_type.should == :i_will_be_saved
     end
   end
 

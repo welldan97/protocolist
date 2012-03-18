@@ -43,7 +43,7 @@ describe Protocolist::ControllerAdditions do
       @controller.explicit_use
 
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :gogogo
+      Activity.last.activity_type.should == :gogogo
       Activity.last.object.name.should == 'Lisa'
       Activity.last.data.should == '<3 <3 <3'
     end
@@ -52,7 +52,7 @@ describe Protocolist::ControllerAdditions do
       @controller.implicit_use
 
       Activity.last.subject.name.should == 'Bill'
-      Activity.last.type.should == :quick_and_dirty_action_stub
+      Activity.last.activity_type.should == :quick_and_dirty_action_stub
       Activity.last.object.name.should == 'Marge'
     end
   end
@@ -66,7 +66,7 @@ describe Protocolist::ControllerAdditions do
           callback_proc.call(@controller)
         }.to change{Activity.count}.by 1
         Activity.last.subject.name.should == 'Bill'
-        Activity.last.type.should == :download
+        Activity.last.activity_type.should == :download
         Activity.last.object.should_not be
       end
       FirestartersController.send(:fires, :download)
@@ -82,7 +82,7 @@ describe Protocolist::ControllerAdditions do
         }.to change{Activity.count}.by 1
 
         Activity.last.subject.name.should == 'Bill'
-        Activity.last.type.should == :download
+        Activity.last.activity_type.should == :download
         Activity.last.data.should == 'les params'
         Activity.last.object.should_not be
       end

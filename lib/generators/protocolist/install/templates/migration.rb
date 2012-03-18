@@ -3,7 +3,7 @@ class CreateActivities < ActiveRecord::Migration
     create_table :activities do |t|
       t.references :subject, :polymorphic => true
       t.references :object, :polymorphic => true
-      t.string :type
+      t.string :activity_type
       t.text :data
 
       t.timestamps
