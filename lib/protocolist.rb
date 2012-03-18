@@ -1,6 +1,7 @@
 require "protocolist/version"
 require "protocolist/model_additions"
 require "protocolist/controller_additions"
+require "protocolist/railtie" if defined? Rails
 
 
 module Protocolist
