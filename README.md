@@ -18,6 +18,12 @@ Run the generator to create Activity model and migration.
 rails generate protocolist:install
 ```
 
+Run migration then:
+
+```ruby
+rake db:migrate
+```
+
 Getting started
 ---------------
 
