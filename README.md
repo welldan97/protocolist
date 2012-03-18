@@ -44,7 +44,7 @@ fires :create
 ```
 
 And when create event will be triggered,  it will automatically create
-Action model with current user set as subject, `:create` as type,
+Activity model with current user set as subject, `:create` as type,
 `self` as object and empty data.
 
 The more convenient usage:
@@ -92,12 +92,12 @@ The customized one:
 
 ```ruby
 fires :download, :only => [:download_report, :download_file, :download_map],
-                 :data => lambda{ params[:city] },
-                 :if => lambda{ response.status == 200 }
+                 :data => lambda{|c| c.params[:city] },
+                 :if => lambda{|c| c.response.status == 200 }
 ```
 
 The `fire` method can be used same way as in models, but also if type is not
-set, it will be set as `action_name`, and object will try to store `@model_name`.
+set, it will be set as `action_name`, and object will try to store `@model_instance`.
 
 ```ruby
 def show
