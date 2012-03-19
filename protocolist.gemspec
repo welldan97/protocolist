@@ -9,15 +9,15 @@ Gem::Specification.new do |s|
   s.email       = ["welldan97@gmail.com"]
   s.homepage    = ""
   s.summary     = %q{Activity feeds solution for Rails.}
-  s.description = %q{Simple and yet flexible Activity feeds solution for Rails applications}
-  
+  s.description = %q{Simple activity feeds solution for Rails applications. Gives a flexible way to build activity feeds infrastructure over it. }
+
   s.rubyforge_project = "protocolist"
-  
+
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  
+
   s.add_development_dependency 'rspec', '~> 2.8.0'
   s.add_development_dependency 'guard-rspec', '~> 0.6.0'
   s.add_development_dependency 'supermodel'

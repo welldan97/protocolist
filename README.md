@@ -1,7 +1,7 @@
 Protocolist
 ===========
 
-Simple and flexible Activity feeds solution for Rails applications.
+Simple activity feeds solution for Rails applications. Gives a flexible way to build activity feeds infrastructure over it.
 
 Installation
 ------------
@@ -9,7 +9,7 @@ Installation
 Add the gem to your Gemfile and run the `bundle install` command to install it.
 
 ```ruby
-gem "protocolist"
+gem 'protocolist'
 ```
 
 Run the generator to create Activity model and migration.
@@ -37,14 +37,14 @@ Protocolist expects you to have `current_user` method in a controller.
 Usage in models
 ---------------
 
-The simplest way is just to write inside your model.
+The simplest way is just to write inside your model:
 
 ```ruby
 fires :create
 ```
 
-And when create event will be triggered,  it will automatically create
-Activity model with current user set as subject, `:create` as type,
+When "create" event will be triggered,  it will automatically create
+Activity with current user set as subject, `:create` as type,
 `self` as object and empty data.
 
 The more convenient usage:
@@ -75,7 +75,7 @@ def destroy_projects
 end
 ```
 
-If you run without `:object` option set, it will set as `self`.
+If you run without `:object` option set, it will default to `self`.
 
 Usage in controllers
 --------------------
@@ -113,3 +113,21 @@ def show
     fire :show, :object => @article
 end
 ```
+
+Contributing
+------------
+I would appreciate any help in gem development.
+Pull requests, issue posts are appreciated.
+
+Also there is probably a bunch of mistakes in my English. Any
+corrections are also appreciated, especially from native speakers.
+
+Special Thanks
+--------------
+Protocolist was inspired by
+[timeline_fu](https://github.com/jamesgolick/timeline_fu).  But its
+functionality wasn't enough for me, so I made my own with
+blackjack and stewardesses.
+
+
+
