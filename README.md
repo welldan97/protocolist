@@ -116,17 +116,18 @@ end
 
 Contributing
 ------------
-I would appreciate any help with gem development.
-Pull requests, issue posts are appreciated.
+I would appreciate any help with gem development: pull requests, issue
+posts, etc.
 
-Also there is probably a bunch of mistakes in my English. Any
+
+Also there is probably a bunch of mistakes in English grammar/spelling. Any
 corrections are also appreciated, especially from native speakers.
 
-Special Thanks
+Thanks
 --------------
 Protocolist was inspired by
-[timeline_fu](https://github.com/jamesgolick/timeline_fu).  But its
-functionality wasn't enough for me, so I made my own with
+[timeline_fu](https://github.com/jamesgolick/timeline_fu).  I used it,
+but its functionality wasn't enough for me, so I made my own with
 blackjack and stewardesses.
 
 
