@@ -116,7 +116,7 @@ end
 
 Contributing
 ------------
-I would appreciate any help in gem development.
+I would appreciate any help with gem development.
 Pull requests, issue posts are appreciated.
 
 Also there is probably a bunch of mistakes in my English. Any
