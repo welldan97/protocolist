@@ -1,5 +1,4 @@
-Protocolist
-===========
+#Protocolist [![Build Status](https://secure.travis-ci.org/welldan97/protocolist.png?branch=master)](http://travis-ci.org/welldan97/protocolist)
 
 Simple activity feeds solution for Rails applications. Gives a flexible way to build activity feeds infrastructure over it.
 
