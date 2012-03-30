@@ -30,8 +30,10 @@ Activity model has four attributes: subject("who did it"), activity_type("what
 they did"), object("what they did it to") and data(additional information). Subject will be
 set as current user by default.
 
-Protocolist expects you to have `current_user` method in a controller.
-̶S̶e̶e̶ ̶C̶h̶a̶n̶g̶i̶n̶g̶ ̶D̶e̶f̶a̶u̶l̶t̶s̶ ̶t̶o̶ ̶c̶h̶a̶n̶g̶e̶ ̶t̶h̶i̶s̶ ̶b̶e̶h̶a̶v̶i̶o̶r̶.̶
+Protocolist expects you to have `current_user` method in a
+controller. See [[Changing Defaults]] to change this behavior.
+
+If creation isn't possible it will silently skip it.
 
 Usage in models
 ---------------
