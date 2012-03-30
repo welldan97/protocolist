@@ -31,7 +31,7 @@ they did"), object("what they did it to") and data(additional information). Subj
 set as current user by default.
 
 Protocolist expects you to have `current_user` method in a
-controller. See [[Changing Defaults]] to change this behavior.
+controller. See [Changing Defaults](https://github.com/welldan97/protocolist/wiki/Changing-Defaults) to change this behavior.
 
 If creation isn't possible it will silently skip it.
 
