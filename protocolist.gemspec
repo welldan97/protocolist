@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '~> 2.8.0'
-  s.add_development_dependency 'guard-rspec', '~> 0.6.0'
+  s.add_development_dependency 'rspec', '~> 2.9.0'
+  s.add_development_dependency 'guard-rspec', '~> 0.7.0'
   s.add_development_dependency 'supermodel'
   s.add_development_dependency 'railties', '~> 3.0'
 end
