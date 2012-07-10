@@ -59,8 +59,8 @@ end
 describe Protocolist::ModelAdditions do
   before :each do
     Activity.destroy_all
-    @subject = User.new(:name => 'Bill')
-    Protocolist.subject = @subject
+    @actor = User.new(:name => 'Bill')
+    Protocolist.actor = @actor
     Protocolist.activity_class = Activity
   end
 
@@ -73,7 +73,7 @@ describe Protocolist::ModelAdditions do
       expect {
         @firestarter.love_letter_for_mary
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :love_letter
       Activity.last.target.name.should == 'Mary'
       Activity.last.data.should == '<3 <3 <3'
@@ -83,7 +83,7 @@ describe Protocolist::ModelAdditions do
       expect {
         @firestarter.myself
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :myself
       Activity.last.target.should == @firestarter
     end
@@ -92,7 +92,7 @@ describe Protocolist::ModelAdditions do
       expect {
         @firestarter.delete
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :delete
       Activity.last.target.should be_false
     end
@@ -103,7 +103,7 @@ describe Protocolist::ModelAdditions do
       expect {
         SimpleFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :create
       Activity.last.target.name.should == 'Ted'
     end
@@ -115,7 +115,7 @@ describe Protocolist::ModelAdditions do
       expect {
           ComplexFirestarter.create(:name => 'Ted')
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :yohoho
       Activity.last.target.should_not be
       Activity.last.data.should == 'Hi!'
@@ -125,7 +125,7 @@ describe Protocolist::ModelAdditions do
       expect {
         ComplexFirestarter.last.destroy
       }.to change{Activity.count}.by 1
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :yohoho
       Activity.last.target.should_not be
       Activity.last.data.should == 'Hi!'

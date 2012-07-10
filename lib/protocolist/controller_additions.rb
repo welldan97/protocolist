@@ -43,7 +43,7 @@ module Protocolist
     end
 
     def initilize_protocolist
-      Protocolist.subject = current_user
+      Protocolist.actor = current_user
       Protocolist.activity_class = Activity
     end
   end

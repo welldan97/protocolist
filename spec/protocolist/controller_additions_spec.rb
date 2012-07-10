@@ -42,7 +42,7 @@ describe Protocolist::ControllerAdditions do
     it 'saves record with target and data when called explicitly' do
       @controller.explicit_use
 
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :gogogo
       Activity.last.target.name.should == 'Lisa'
       Activity.last.data.should == '<3 <3 <3'
@@ -51,7 +51,7 @@ describe Protocolist::ControllerAdditions do
     it 'saves record with target and data when called implicitly' do
       @controller.implicit_use
 
-      Activity.last.subject.name.should == 'Bill'
+      Activity.last.actor.name.should == 'Bill'
       Activity.last.activity_type.should == :quick_and_dirty_action_stub
       Activity.last.target.name.should == 'Marge'
     end
@@ -65,7 +65,7 @@ describe Protocolist::ControllerAdditions do
         expect {
           callback_proc.call(@controller)
         }.to change{Activity.count}.by 1
-        Activity.last.subject.name.should == 'Bill'
+        Activity.last.actor.name.should == 'Bill'
         Activity.last.activity_type.should == :download
         Activity.last.target.should_not be
       end
@@ -81,7 +81,7 @@ describe Protocolist::ControllerAdditions do
           callback_proc.call(@controller)
         }.to change{Activity.count}.by 1
 
-        Activity.last.subject.name.should == 'Bill'
+        Activity.last.actor.name.should == 'Bill'
         Activity.last.activity_type.should == :download
         Activity.last.data.should == 'les params'
         Activity.last.target.should_not be

@@ -11,9 +11,9 @@ module Protocolist
         migration_template "migration.rb", "db/migrate/create_activities"
         invoke "active_record:model", ['Activity'], :migration => false
         model_content = <<CONTENT
-  attr_accessible :activity_type, :target, :subject, :data
+  attr_accessible :activity_type, :target, :actor, :data
   belongs_to :target, :polymorphic => true
-  belongs_to :subject, :polymorphic => true
+  belongs_to :actor, :polymorphic => true
   serialize :data
 CONTENT
         inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))

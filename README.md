@@ -26,7 +26,7 @@ rake db:migrate
 Getting started
 ---------------
 
-Activity model has four attributes: subject("who did it"), activity_type("what
+Activity model has four attributes: actor("who did it"), activity_type("what
 they did"), target("what they did it to") and data(additional information). Subject will be
 set as current user by default.
 
@@ -45,7 +45,7 @@ fires :create
 ```
 
 When "create" event will be triggered,  it will automatically create
-Activity with current user set as subject, `:create` as type,
+Activity with current user set as actor, `:create` as type,
 `self` as target and empty data.
 
 The more convenient usage:

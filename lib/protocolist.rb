@@ -7,16 +7,16 @@ require "protocolist/railtie" if defined? Rails
 module Protocolist
 
   def self.fire activity_type, options={}
-    options = {:subject => @subject, :activity_type => activity_type}.merge options
-    @activity_class.create options if options[:subject] && @activity_class
+    options = {:actor => @actor, :activity_type => activity_type}.merge options
+    @activity_class.create options if options[:actor] && @activity_class
   end
 
-  def self.subject
-    @subject
+  def self.actor
+    @actor
   end
 
-  def self.subject= subject
-    @subject = subject
+  def self.actor= actor
+    @actor = actor
   end
 
   def self.activity_class
