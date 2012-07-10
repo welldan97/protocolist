@@ -1,1 +1,1 @@
-Generates both the Activity class and the migration to create its table. The table will have subject, object, type and data columns.
+Generates both the Activity class and the migration to create its table. The table will have subject, target, type and data columns.

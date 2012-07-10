@@ -32,8 +32,8 @@ module Protocolist
     end
 
     def fire activity_type, options={}
-      options[:object] = self if options[:object] == nil
-      options[:object] = nil if options[:object] == false
+      options[:target] = self if options[:target] == nil
+      options[:target] = nil if options[:target] == false
 
       Protocolist.fire activity_type, options
     end

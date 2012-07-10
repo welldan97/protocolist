@@ -35,8 +35,8 @@ module Protocolist
     end
 
     def fire activity_type=nil, options={}
-      options[:object] =  instance_variable_get("@#{self.controller_name.singularize}") if options[:object] == nil
-      options[:object] = nil if options[:object] == false
+      options[:target] =  instance_variable_get("@#{self.controller_name.singularize}") if options[:target] == nil
+      options[:target] = nil if options[:target] == false
       activity_type ||= action_name.to_sym
 
       Protocolist.fire activity_type, options

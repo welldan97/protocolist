@@ -12,7 +12,7 @@ class Firestarter < SuperModel::Base
   include Protocolist::ModelAdditions
 
   def delete
-    fire :delete, :object => false
+    fire :delete, :target => false
   end
 
   def myself
@@ -21,7 +21,7 @@ class Firestarter < SuperModel::Base
 
   def love_letter_for_mary
     user = User.create(:name => 'Mary')
-    fire :love_letter, :object => user, :data => '<3 <3 <3'
+    fire :love_letter, :target => user, :data => '<3 <3 <3'
   end
 end
 
@@ -49,7 +49,7 @@ end
 class ComplexFirestarter < SuperModel::Base
   include Protocolist::ModelAdditions
 
-  fires :yohoho, :on =>[:create, :destroy], :object => false, :data => :hi
+  fires :yohoho, :on =>[:create, :destroy], :target => false, :data => :hi
 
   def hi
     'Hi!'
@@ -69,32 +69,32 @@ describe Protocolist::ModelAdditions do
       @firestarter = Firestarter.new
     end
 
-    it 'saves record with object and data' do
+    it 'saves record with target and data' do
       expect {
         @firestarter.love_letter_for_mary
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :love_letter
-      Activity.last.object.name.should == 'Mary'
+      Activity.last.target.name.should == 'Mary'
       Activity.last.data.should == '<3 <3 <3'
     end
 
-    it 'saves record with self as object if object is not set' do
+    it 'saves record with self as target if target is not set' do
       expect {
         @firestarter.myself
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :myself
-      Activity.last.object.should == @firestarter
+      Activity.last.target.should == @firestarter
     end
 
-    it 'saves record without object if object set to false' do
+    it 'saves record without target if target set to false' do
       expect {
         @firestarter.delete
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :delete
-      Activity.last.object.should be_false
+      Activity.last.target.should be_false
     end
   end
 
@@ -105,7 +105,7 @@ describe Protocolist::ModelAdditions do
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :create
-      Activity.last.object.name.should == 'Ted'
+      Activity.last.target.name.should == 'Ted'
     end
 
     it 'saves record when called with complex options' do
@@ -117,7 +117,7 @@ describe Protocolist::ModelAdditions do
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :yohoho
-      Activity.last.object.should_not be
+      Activity.last.target.should_not be
       Activity.last.data.should == 'Hi!'
 
       #then destroy record
@@ -127,7 +127,7 @@ describe Protocolist::ModelAdditions do
       }.to change{Activity.count}.by 1
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :yohoho
-      Activity.last.object.should_not be
+      Activity.last.target.should_not be
       Activity.last.data.should == 'Hi!'
     end
 

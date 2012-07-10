@@ -27,7 +27,7 @@ Getting started
 ---------------
 
 Activity model has four attributes: subject("who did it"), activity_type("what
-they did"), object("what they did it to") and data(additional information). Subject will be
+they did"), target("what they did it to") and data(additional information). Subject will be
 set as current user by default.
 
 Protocolist expects you to have `current_user` method in a
@@ -46,7 +46,7 @@ fires :create
 
 When "create" event will be triggered,  it will automatically create
 Activity with current user set as subject, `:create` as type,
-`self` as object and empty data.
+`self` as target and empty data.
 
 The more convenient usage:
 
@@ -72,11 +72,11 @@ The most flexible way is to use `fire` method:
 ```ruby
 def destroy_projects
     self.projects.destroy_all
-    fire :destroy_all, :object => false, :data => {:company_id => company_id}
+    fire :destroy_all, :target => false, :data => {:company_id => company_id}
 end
 ```
 
-If you run without `:object` option set, it will default to `self`.
+If you run without `:target` option set, it will default to `self`.
 
 Usage in controllers
 --------------------
@@ -98,7 +98,7 @@ fires :download, :only => [:download_report, :download_file, :download_map],
 ```
 
 The `fire` method can be used same way as in models, but also if type is not
-set, it will be set as `action_name`, and object will try to store `@model_instance`.
+set, it will be set as `action_name`, and target will try to store `@model_instance`.
 
 ```ruby
 def show
@@ -111,7 +111,7 @@ is the same as
 ```ruby
 def show
     @article = Article.find(params[:id])
-    fire :show, :object => @article
+    fire :show, :target => @article
 end
 ```
 

@@ -15,7 +15,7 @@ class FirestartersController
 
   include Protocolist::ControllerAdditions
   def explicit_use
-    fire :gogogo, :object => User.new(:name => 'Lisa'), :data => '<3 <3 <3'
+    fire :gogogo, :target => User.new(:name => 'Lisa'), :data => '<3 <3 <3'
   end
 
   def implicit_use
@@ -39,21 +39,21 @@ describe Protocolist::ControllerAdditions do
   end
 
   describe 'direct fire method call' do
-    it 'saves record with object and data when called explicitly' do
+    it 'saves record with target and data when called explicitly' do
       @controller.explicit_use
 
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :gogogo
-      Activity.last.object.name.should == 'Lisa'
+      Activity.last.target.name.should == 'Lisa'
       Activity.last.data.should == '<3 <3 <3'
     end
 
-    it 'saves record with object and data when called implicitly' do
+    it 'saves record with target and data when called implicitly' do
       @controller.implicit_use
 
       Activity.last.subject.name.should == 'Bill'
       Activity.last.activity_type.should == :quick_and_dirty_action_stub
-      Activity.last.object.name.should == 'Marge'
+      Activity.last.target.name.should == 'Marge'
     end
   end
 
@@ -67,7 +67,7 @@ describe Protocolist::ControllerAdditions do
         }.to change{Activity.count}.by 1
         Activity.last.subject.name.should == 'Bill'
         Activity.last.activity_type.should == :download
-        Activity.last.object.should_not be
+        Activity.last.target.should_not be
       end
       FirestartersController.send(:fires, :download)
     end
@@ -84,7 +84,7 @@ describe Protocolist::ControllerAdditions do
         Activity.last.subject.name.should == 'Bill'
         Activity.last.activity_type.should == :download
         Activity.last.data.should == 'les params'
-        Activity.last.object.should_not be
+        Activity.last.target.should_not be
       end
 
       FirestartersController.send(:fires, :download,

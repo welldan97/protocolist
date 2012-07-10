@@ -37,18 +37,18 @@ describe Protocolist do
 
   it 'should save a complex record' do
     another_subject = User.new(:name => 'Bob')
-    object = User.new(:name => 'Mary')
+    target = User.new(:name => 'Mary')
 
     expect {
       Protocolist.fire :alarm,
       :subject => another_subject,
-      :object => object,
+      :target => target,
       :data => {:some_attr => :some_data}
     }.to change{Activity.count}.by 1
 
     Activity.last.subject.name.should == 'Bob'
     Activity.last.activity_type.should == :alarm
-    Activity.last.object.name.should == 'Mary'
+    Activity.last.target.name.should == 'Mary'
     Activity.last.data[:some_attr].should == :some_data
   end
 end

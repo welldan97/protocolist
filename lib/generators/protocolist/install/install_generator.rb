@@ -11,8 +11,8 @@ module Protocolist
         migration_template "migration.rb", "db/migrate/create_activities"
         invoke "active_record:model", ['Activity'], :migration => false
         model_content = <<CONTENT
-  attr_accessible :activity_type, :object, :subject, :data
-  belongs_to :object, :polymorphic => true
+  attr_accessible :activity_type, :target, :subject, :data
+  belongs_to :target, :polymorphic => true
   belongs_to :subject, :polymorphic => true
   serialize :data
 CONTENT
