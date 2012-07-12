@@ -22,10 +22,29 @@ describe Protocolist do
     expect {Protocolist.fire :alarm}.not_to raise_error
   end
 
-  it 'should silently skip saving if activity_class is falsy' do
+  it 'should not silently skip saving if activity_class is falsy' do
     Protocolist.activity_class = nil
-    expect {Protocolist.fire :alarm}.not_to change{Activity.count}
+    expect {Protocolist.fire :alarm}.to change{Activity.count}.by 1
     expect {Protocolist.fire :alarm}.not_to raise_error
+  end
+
+  it 'should save a record when activity_class is falsy' do
+    Protocolist.activity_class = nil
+
+    expect {Protocolist.fire :alarm}.to change{Activity.count}.by 1
+
+    Activity.last.actor.should == @actor
+    Activity.last.activity_type.should == :alarm
+  end
+
+  it 'should allow to pass :actor as a custom parameter' do
+    expect {
+      Protocolist.fire :alarm,
+                       :actor => User.new(:name => 'Bob')
+    }.to change{Activity.count}.by 1
+
+    Activity.last.actor.name.should == 'Bob'
+    Activity.last.activity_type.should == :alarm
   end
 
   it 'should save a simple record' do

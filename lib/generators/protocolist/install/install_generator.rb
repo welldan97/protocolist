@@ -8,16 +8,30 @@ module Protocolist
       source_root File.expand_path("../templates", __FILE__)
 
       def generate_activity_model
-        migration_template "migration.rb", "db/migrate/create_activities"
-        invoke "active_record:model", ['Activity'], :migration => false
-        model_content = <<CONTENT
+        unless defined?(Mongoid)
+          migration_template "migration.rb", "db/migrate/create_activities"
+          invoke "active_record:model", ['Activity'], :migration => false
+          model_content = <<CONTENT
   attr_accessible :activity_type, :target, :actor, :data
   belongs_to :target, :polymorphic => true
   belongs_to :actor, :polymorphic => true
   serialize :data
 CONTENT
-        inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
+          inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
+        else
+          invoke "mongoid:model", ['Activity']
+          model_content = <<CONTENT
 
+  belongs_to :actor,  polymorphic: true
+  belongs_to :target, polymorphic: true
+
+  field :activity_type, type: String
+  field :data, type: Hash
+
+CONTENT
+          inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
+
+        end
 
       end
 
