@@ -50,17 +50,13 @@ end
 class ComplexFirestarter < SuperModel::Base
   include Protocolist::ModelAdditions
 
-  fires :yohoho, :on =>:create, :target => false, :data => :hi
-  fires :bottle_of_rum, :on =>:destroy, :target => false, :data => :bye
+  fires :yohoho, :on =>[:create, :destroy], :target => false, :data => :hi
   fires :updates_tags, :on =>:update, :tags => 'some,csv,tags,here', data: :changes
 
   def hi
     'Hi!'
   end
 
-  def bye
-    'Bye!'
-  end
 end
 
 class CustomFirestarter < SuperModel::Base
@@ -144,9 +140,9 @@ describe Protocolist::ModelAdditions do
         ComplexFirestarter.last.destroy
       }.to change{Activity.count}.by 1
       Activity.last.actor.name.should == 'Bill'
-      Activity.last.activity_type.should == :bottle_of_rum
+      Activity.last.activity_type.should == :yohoho
       Activity.last.target.should_not be
-      Activity.last.data.should == 'Bye!'
+      Activity.last.data.should == 'Hi!'
     end
 
     it 'saves checks :if condition' do

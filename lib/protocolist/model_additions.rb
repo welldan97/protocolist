@@ -5,12 +5,12 @@ module Protocolist
         #options normalization
         fires_on = Array(options[:on] || activity_type)
 
-        default_fields = ['_type', '_id', 'created_at', 'updated_at', 'activity_type', 'actor_type', 'actor_id', 'target_type', 'target_id']
+        default_fields = ['_type', '_id', 'created_at', 'updated_at', 'activity_type', 'actor_type', 'actor_id', 'target_type', 'target_id', 'id']
         data_fields = (if defined? (Mongoid)
                         Protocolist.activity_class.fields.keys
                       else
                         Protocolist.activity_class.new.attributes.keys
-                      end  - default_fields ).collect{|key| key.gsub(/(_type|_id)$/, '').to_sym}  # Allows polymotphic assotiations in custom data fields
+                      end  - default_fields ).collect{|key| key.gsub(/(_type|_id)$/, '').to_sym}.uniq  # Allows polymotphic assotiations in custom data fields
         data_procs = data_fields.inject({}) do |memo, sym|
           if options[sym]
             memo[sym] = if options[sym].respond_to?(:call)
@@ -30,7 +30,7 @@ module Protocolist
 
         method_name = :"fire_#{activity_type}_after_#{fires_on.join('_')}"
         define_method(method_name) do
-          data_procs.each_pair {|key, val| data_procs[key] = val.call(self) }
+          data_procs.each_pair {|key, val| data_procs[key] = val.respond_to?(:call) ? val.call(self) : val }
           opts = options_for_fire.merge data_procs
           fire activity_type, opts
         end
