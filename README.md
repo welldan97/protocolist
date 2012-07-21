@@ -27,7 +27,7 @@ Getting started
 ---------------
 
 Activity model has four attributes: actor("who did it"), activity_type("what
-they did"), target("what they did it to") and data(additional information). Subject will be
+they did"), target("what they did it to") and data(additional information). Actor will be
 set as current user by default.
 
 Protocolist expects you to have `current_user` method in a
