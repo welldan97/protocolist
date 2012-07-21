@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 2.9.0'
   s.add_development_dependency 'guard-rspec', '~> 0.7.0'
   s.add_development_dependency 'supermodel', '~> 0.1.6'
+  s.add_development_dependency 'psych', '~> 1.2.2' # fixes ' superclass mismatch for class Mark ' error
   s.add_development_dependency 'railties', '~> 3.0'
 end
