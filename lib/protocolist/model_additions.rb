@@ -5,7 +5,7 @@ module Protocolist
         #options normalization
         fires_on = Array(options[:on] || activity_type)
 
-        default_fields = ['_type', '_id', 'created_at', 'updated_at', 'activity_type', 'actor_type', 'actor_id', 'target_type', 'target_id', 'id']
+        default_fields = ['_type', '_id', 'created_at', 'updated_at', 'activity_type', 'actor_type', 'actor_id', 'id']
         data_fields = (if defined? (Mongoid)
                         Protocolist.activity_class.fields.keys
                       else
