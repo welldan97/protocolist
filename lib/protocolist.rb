@@ -10,7 +10,7 @@ module Protocolist
   def self.fire activity_type, options={}
     options = {:actor => @actor}.merge options unless options[:actor]
     options = {:activity_type => activity_type}.merge options
-    activity_class.create options if options[:actor]
+    activity_class.create options if options[:actor] && options[:target]
   end
 
   def self.actor
