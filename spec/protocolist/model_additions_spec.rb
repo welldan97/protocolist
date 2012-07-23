@@ -5,7 +5,7 @@ class User < SuperModel::Base
 end
 
 class Activity < SuperModel::Base
-
+  attributes :data, :language_key, :secondary_target_type, :secondary_target_id
 end
 
 class Firestarter < SuperModel::Base
@@ -36,6 +36,7 @@ class ConditionalFirestarter < SuperModel::Base
 
   fires :i_will_be_saved, :on => :create, :if => :return_true_please
   fires :and_i_won_t, :on => :create, :if => :return_false_please
+  fires :but_i_will_too, :on => :create, :unless => :return_false_please
 
   def return_false_please
     false
@@ -50,10 +51,23 @@ class ComplexFirestarter < SuperModel::Base
   include Protocolist::ModelAdditions
 
   fires :yohoho, :on =>[:create, :destroy], :target => false, :data => :hi
+  fires :updates_tags, :on =>:update, :tags => 'some,csv,tags,here', data: :changes
 
   def hi
     'Hi!'
   end
+
+end
+
+class CustomFirestarter < SuperModel::Base
+  include Protocolist::ModelAdditions
+
+  fires :updates_tags, on: :update, tags: 'some,csv,tags,here', data: :changes
+  fires :destroyed_by,
+        on: :destroy,
+        secondary_target: User.create(:name => 'Mary'),
+        data: :changes
+
 end
 
 describe Protocolist::ModelAdditions do
@@ -131,12 +145,57 @@ describe Protocolist::ModelAdditions do
       Activity.last.data.should == 'Hi!'
     end
 
-    it 'saves checks conditions' do
+    it 'saves checks :if condition' do
       expect {
         ConditionalFirestarter.create(:name => 'Ted')
-      }.to change{Activity.count}.by 1
-      Activity.last.activity_type.should == :i_will_be_saved
+      }.to change{Activity.count}.by 2
+      Activity.first.activity_type.should == :i_will_be_saved
     end
+
+    it 'saves checks :unless condition' do
+      expect {
+        ConditionalFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 2
+      Activity.first.activity_type.should == :i_will_be_saved
+      Activity.find_by_activity_type(:and_i_won_t).should be_nil
+      Activity.find_by_activity_type(:but_i_will_too).should_not be_nil
+    end
+
+    it 'allows additional attributes to be defined' do
+
+      #first create record
+
+      expect {
+        CustomFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 0
+
+      #then update record
+
+      expect {
+        CustomFirestarter.last.update_attribute(:name, 'Rob')
+      }.to change{Activity.count}.by 1
+      Activity.last.activity_type.should == :updates_tags
+      Activity.last.tags.should ==  'some,csv,tags,here'
+      Activity.last.data.should ==  {"name"=>["Ted", "Rob"]}
+    end
+
+    it 'allows additionally defined attributes to be references' do
+
+      #first create record
+
+      expect {
+        CustomFirestarter.create(:name => 'Ted')
+      }.to change{Activity.count}.by 0
+
+      #then update record
+
+      expect {
+        CustomFirestarter.last.destroy
+      }.to change{Activity.count}.by 1
+      Activity.last.activity_type.should == :destroyed_by
+      Activity.last.secondary_target.should ==  User.first
+    end
+
   end
 
 
