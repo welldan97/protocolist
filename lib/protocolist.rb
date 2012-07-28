@@ -1,8 +1,11 @@
-%w{active_support protocolist/version protocolist/model_additions protocolist/controller_additions}.each do |f|
-  require f
-end
+require 'active_support'
+
+require 'protocolist/version'
+require 'protocolist/model_additions'
+require 'protocolist/controller_additions'
 
 require 'protocolist/railtie' if defined? Rails
+
 
 module Protocolist
 
