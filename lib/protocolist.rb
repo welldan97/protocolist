@@ -1,3 +1,5 @@
+require 'active_support'
+
 require "protocolist/version"
 require "protocolist/model_additions"
 require "protocolist/controller_additions"
