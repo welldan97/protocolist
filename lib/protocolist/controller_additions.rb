@@ -1,50 +1,45 @@
+require 'protocolist/controller_additions/initializer'
+
 module Protocolist
   module ControllerAdditions
-    module ClassMethods
-      def fires activity_type, options={}
-        #options normalization
-        options[:only] ||= activity_type unless options[:except]
-
-        data_proc = if options[:data].respond_to?(:call)
-                      lambda{|controller| options[:data].call(controller)}
-                    elsif options[:data].class == Symbol
-                      lambda{|controller| controller.send(options[:data]) }
-                    else
-                      lambda{|record| options[:data] }
-                    end
-
-        options_for_callback = options.select{|k,v| [:if, :unless, :only, :except].include? k }
-
-        options_for_fire = options.reject{|k,v| [:if, :unless, :only, :except].include? k }
-
-        callback_proc = lambda{|controller|
-          controller.fire activity_type, options_for_fire.merge({:data => data_proc.call(controller)})
-        }
-
-        send(:after_filter, callback_proc, options_for_callback)
-      end
-
-
-      def self.extended base
-        base.send(:before_filter, :initilize_protocolist)
-      end
-    end
-
-    def self.included base
-      base.extend ClassMethods
-    end
-
-    def fire activity_type=nil, options={}
-      options[:target] =  instance_variable_get("@#{self.controller_name.singularize}") if options[:target] == nil
+    extend ActiveSupport::Concern
+    include Initializer
+    
+    def fire(activity_type = nil, options = {})
+      options[:target] = instance_variable_get("@#{controller_name.singularize}") if options[:target] == nil
       options[:target] = nil if options[:target] == false
       activity_type ||= action_name.to_sym
 
-      Protocolist.fire activity_type, options
+      Protocolist.fire(activity_type, options)
     end
+    
+    module ClassMethods
+      def fires(activity_type, options = {})
+        options[:only] ||= activity_type unless options[:except]
 
-    def initilize_protocolist
-      Protocolist.actor = current_user
-      Protocolist.activity_class = Activity
+        data_proc = extract_data_proc options[:data]
+
+        options_for_callback = options.slice(:if, :unless, :only, :except)
+        options_for_fire     = options.except(:if, :unless, :only, :except)
+
+        callback_proc = lambda do |controller|
+          controller.fire(activity_type, options_for_fire.merge(:data => data_proc.call(controller)))
+        end
+
+        send(:after_filter, callback_proc, options_for_callback)
+      end
+      
+      private
+      
+      def extract_data_proc(data)
+        if data.respond_to? :call
+          lambda {|controller| data.call(controller) }
+        elsif data.is_a? Symbol
+          lambda {|controller| controller.send(data) }
+        else
+          lambda {|record| data }
+        end
+      end
     end
   end
 end

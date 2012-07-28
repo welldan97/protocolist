@@ -14,6 +14,7 @@ class FirestartersController
   end
 
   include Protocolist::ControllerAdditions
+  
   def explicit_use
     fire :gogogo, :target => User.new(:name => 'Lisa'), :data => '<3 <3 <3'
   end
@@ -35,7 +36,7 @@ describe Protocolist::ControllerAdditions do
     @controller.stub(:action_name){'quick_and_dirty_action_stub'}
     @controller.stub(:params){'les params'}
 
-    @controller.initilize_protocolist
+    @controller.initialize_protocolist
   end
 
   describe 'direct fire method call' do
