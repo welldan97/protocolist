@@ -52,9 +52,9 @@ Activity with current user set as actor, `:create` as type,
 The more convenient usage:
 
 ```ruby
-fires :edit, on: :update,
+fires :edit, on:   :update,
              data: :changes,
-             if: 'changes.any?'
+             if:   'changes.any?'
 ```
 
 The event type will be `edit`. A proc, symbol a̶n̶d̶ ̶a̶ ̶s̶t̶r̶i̶n̶g̶ for data
@@ -95,7 +95,7 @@ The customized one:
 ```ruby
 fires :download, only: [:download_report, :download_file, :download_map],
                  data: lambda{|c| c.params[:city] },
-                 if: lambda{|c| c.response.status == 200 }
+                 if:   lambda{|c| c.response.status == 200 }
 ```
 
 The `fire` method can be used same way as in models, but also if type is not
