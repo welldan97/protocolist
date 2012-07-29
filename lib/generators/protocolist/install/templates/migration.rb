@@ -1,8 +1,9 @@
 class CreateActivities < ActiveRecord::Migration
   def change
     create_table :activities do |t|
-      t.references :actor, :polymorphic => true
-      t.references :target, :polymorphic => true
+      t.references :actor,  polymorphic: true
+      t.references :target, polymorphic: true
+
       t.string :activity_type
       t.text :data
 

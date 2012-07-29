@@ -29,11 +29,11 @@ module Protocolist
       def generate_mongoid_activity_model
         content = <<-CONTENT.gsub(/^ +/, '  ')
 
-          belongs_to :actor,  :polymorphic => true
-          belongs_to :target, :polymorphic => true
+          belongs_to :actor,  polymorphic: true
+          belongs_to :target, polymorphic: true
 
-          field :activity_type, :type => String
-          field :data, :type => Hash
+          field :activity_type, type: String
+          field :data,          type: Hash
         CONTENT
 
 
@@ -48,8 +48,8 @@ module Protocolist
         content = <<-CONTENT.gsub(/^ +/, '  ')
           attr_accessible :activity_type, :target, :actor, :data
 
-          belongs_to :target, :polymorphic => true
-          belongs_to :actor,  :polymorphic => true
+          belongs_to :target, polymorphic: true
+          belongs_to :actor,  polymorphic: true
 
           serialize :data
         CONTENT

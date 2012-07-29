@@ -52,9 +52,9 @@ Activity with current user set as actor, `:create` as type,
 The more convenient usage:
 
 ```ruby
-fires :edit, :on => :update,
-             :data => :changes,
-             :if => 'changes.any?'
+fires :edit, on: :update,
+             data: :changes,
+             if: 'changes.any?'
 ```
 
 The event type will be `edit`. A proc, symbol a̶n̶d̶ ̶a̶ ̶s̶t̶r̶i̶n̶g̶ for data
@@ -65,7 +65,7 @@ The `unless` option also can be passed.
 The `on` option can be an array:
 
 ```ruby
-fires :comment_activity, :on => [:create, :update, :destroy]
+fires :comment_activity, on: [:create, :update, :destroy]
 ```
 
 The most flexible way is to use `fire` method:
@@ -73,7 +73,7 @@ The most flexible way is to use `fire` method:
 ```ruby
 def destroy_projects
     self.projects.destroy_all
-    fire :destroy_all, :target => false, :data => {:company_id => company_id}
+    fire :destroy_all, target: false, data: {company_id: company_id}
 end
 ```
 
@@ -93,9 +93,9 @@ which will strike after download action.
 The customized one:
 
 ```ruby
-fires :download, :only => [:download_report, :download_file, :download_map],
-                 :data => lambda{|c| c.params[:city] },
-                 :if => lambda{|c| c.response.status == 200 }
+fires :download, only: [:download_report, :download_file, :download_map],
+                 data: lambda{|c| c.params[:city] },
+                 if: lambda{|c| c.response.status == 200 }
 ```
 
 The `fire` method can be used same way as in models, but also if type is not
@@ -112,7 +112,7 @@ is the same as
 ```ruby
 def show
     @article = Article.find(params[:id])
-    fire :show, :target => @article
+    fire :show, target: @article
 end
 ```
 
