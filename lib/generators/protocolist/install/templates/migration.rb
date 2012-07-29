@@ -8,7 +8,7 @@ class CreateActivities < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :activities, :actor_id
-    add_index :activities, :target_id
+    add_index :activities, [:actor_id, :actor_type]
+    add_index :activities, [:target_id, :target_type]
   end
 end
