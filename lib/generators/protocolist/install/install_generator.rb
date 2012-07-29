@@ -15,7 +15,10 @@ module Protocolist
           migration_template "migration.rb", "db/migrate/create_activities"
 
           invoke "active_record:model", ['Activity'], :migration => false
-          inject_into_class('app/models/activity.rb', 'Activity', active_record_model_contents) if model_exists?
+          if model_exists?
+            gsub_file 'app/models/activity.rb', / +# attr_accessible :title, :body\n/, ''
+            inject_into_class('app/models/activity.rb', 'Activity', active_record_model_contents)
+          end
         end
       end
 
