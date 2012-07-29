@@ -29,7 +29,7 @@ CONTENT
   field :data, type: Hash
 
 CONTENT
-          inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
+          inject_into_file('app/models/activity.rb', model_content, :after => "include Mongoid::Document\n") if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
 
         end
 
