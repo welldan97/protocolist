@@ -10,8 +10,8 @@ require 'protocolist/railtie' if defined? Rails
 module Protocolist
 
   def self.fire(activity_type, options = {})
-    options = { :actor => @actor, :activity_type => activity_type }.merge options
-    @activity_class.create options if options[:actor] && @activity_class
+    options = { actor: @actor, activity_type: activity_type }.merge options
+    @activity_class.try(:create, options) if options[:actor]
   end
   
   class << self

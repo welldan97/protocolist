@@ -1,10 +1,12 @@
 require 'protocolist/controller_additions/initializer'
+require 'protocolist/util/data_proc'
 
 module Protocolist
   module ControllerAdditions
     extend ActiveSupport::Concern
     include Initializer
-    
+    include Util::DataProc
+
     def fire(activity_type = nil, options = {})
       options[:target] = instance_variable_get("@#{controller_name.singularize}") if options[:target] == nil
       options[:target] = nil if options[:target] == false
@@ -23,22 +25,10 @@ module Protocolist
         options_for_fire     = options.except(:if, :unless, :only, :except)
 
         callback_proc = lambda do |controller|
-          controller.fire(activity_type, options_for_fire.merge(:data => data_proc.call(controller)))
+          controller.fire(activity_type, options_for_fire.merge(data: data_proc.call(controller)))
         end
 
         send(:after_filter, callback_proc, options_for_callback)
-      end
-      
-      private
-      
-      def extract_data_proc(data)
-        if data.respond_to? :call
-          lambda {|controller| data.call(controller) }
-        elsif data.is_a? Symbol
-          lambda {|controller| controller.send(data) }
-        else
-          lambda {|record| data }
-        end
       end
     end
   end
