@@ -1,13 +1,5 @@
 require "spec_helper"
 
-class User < SuperModel::Base
-
-end
-
-class Activity < SuperModel::Base
-
-end
-
 class FirestartersController
   #stub before filter
   def self.before_filter *args
@@ -15,46 +7,51 @@ class FirestartersController
 
   include Protocolist::ControllerAdditions
   
-  def explicit_use
-    fire :gogogo, :target => User.new(:name => 'Lisa'), :data => '<3 <3 <3'
+  def explicit_use(target, data)
+    fire :gogogo, target: target, data: data
   end
 
-  def implicit_use
-    @firestarter = User.new(:name => 'Marge')
+  def implicit_use(target)
+    @firestarter = target
     fire
   end
 end
 
 describe Protocolist::ControllerAdditions do
+  let(:controller) { FirestartersController.new }
+  let(:actor) { User.new(name: 'Bill') }
+  let(:lisa)  { User.new(name: 'Lisa') }
+  let(:mary)  { User.new(name: 'Mary') }
+  
   before :each do
     Activity.destroy_all
-    user = User.new(:name => 'Bill')
-    @controller = FirestartersController.new
 
-    @controller.stub(:current_user){user}
-    @controller.stub(:controller_name){'firestarters'}
-    @controller.stub(:action_name){'quick_and_dirty_action_stub'}
-    @controller.stub(:params){'les params'}
+    controller.stub(:current_user).and_return actor
+    controller.stub(:controller_name).and_return 'firestarters'
+    controller.stub(:action_name).and_return 'quick_and_dirty_action_stub'
+    controller.stub(:params).and_return 'les params'
 
-    @controller.initialize_protocolist
+    controller.initialize_protocolist
   end
 
   describe 'direct fire method call' do
     it 'saves record with target and data when called explicitly' do
-      @controller.explicit_use
+      controller.explicit_use(lisa, '<3 <3 <3')
 
-      Activity.last.actor.name.should == 'Bill'
-      Activity.last.activity_type.should == :gogogo
-      Activity.last.target.name.should == 'Lisa'
-      Activity.last.data.should == '<3 <3 <3'
+      activity = Activity.last
+      activity.actor.should         == actor
+      activity.activity_type.should == :gogogo
+      activity.target.should        == lisa
+      activity.data.should          == '<3 <3 <3'
     end
 
     it 'saves record with target and data when called implicitly' do
-      @controller.implicit_use
+      controller.implicit_use(mary)
 
-      Activity.last.actor.name.should == 'Bill'
-      Activity.last.activity_type.should == :quick_and_dirty_action_stub
-      Activity.last.target.name.should == 'Marge'
+      activity = Activity.last
+      activity.actor.should         == actor
+      activity.activity_type.should == :quick_and_dirty_action_stub
+      activity.target.should        == mary
     end
   end
 
@@ -62,36 +59,35 @@ describe Protocolist::ControllerAdditions do
     it 'saves record when called with minimal options' do
       FirestartersController.should_receive(:after_filter) do |callback_proc, options|
         options[:only].should == :download
-
-        expect {
-          callback_proc.call(@controller)
-        }.to change{Activity.count}.by 1
-        Activity.last.actor.name.should == 'Bill'
-        Activity.last.activity_type.should == :download
-        Activity.last.target.should_not be
+        expect { callback_proc.call(controller) }.to change{ Activity.count }.by 1
+        
+        activity = Activity.last
+        activity.actor.should         == actor
+        activity.activity_type.should == :download
+        activity.target.should_not be
       end
+      
       FirestartersController.send(:fires, :download)
     end
 
     it 'saves record when called with complex options' do
       FirestartersController.should_receive(:after_filter) do |callback_proc, options|
         options[:only].should == [:download_report, :download_file, :download_map]
-        options[:if].should == 'if condition'
+        options[:if].should   == 'if condition'
 
-        expect {
-          callback_proc.call(@controller)
-        }.to change{Activity.count}.by 1
+        expect { callback_proc.call(controller) }.to change{ Activity.count }.by 1
 
-        Activity.last.actor.name.should == 'Bill'
-        Activity.last.activity_type.should == :download
-        Activity.last.data.should == 'les params'
-        Activity.last.target.should_not be
+        activity = Activity.last
+        activity.actor.should         == actor
+        activity.activity_type.should == :download
+        activity.data.should          == 'les params'
+        activity.target.should_not be
       end
 
-      FirestartersController.send(:fires, :download,
-                                  :only => [:download_report, :download_file, :download_map],
-                                  :data => lambda{|c| c.params },
-                                  :if => 'if condition')
+      FirestartersController.send(:fires, :download, 
+        only: [:download_report, :download_file, :download_map],
+        data: lambda {|c| c.params }, if: 'if condition'
+      )
     end
   end
 end
