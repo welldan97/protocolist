@@ -39,7 +39,7 @@ module Protocolist
         invoke "mongoid:model", [model_classname]
         
         if model_exists?
-          inject_into_file(model_filename, content, :after => "include Mongoid::Document\n")
+          inject_into_file(model_filename, content, after: "include Mongoid::Document\n")
         end
       end
       
@@ -55,7 +55,7 @@ module Protocolist
         
         
         migration_template "migration.rb", "db/migrate/create_activities"
-        invoke "active_record:model", [model_classname], :migration => false
+        invoke "active_record:model", [model_classname], migration: false
         
         if model_exists?
           gsub_file model_filename, / +# attr_accessible :title, :body\n/, ''

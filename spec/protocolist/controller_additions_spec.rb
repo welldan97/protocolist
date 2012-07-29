@@ -8,7 +8,7 @@ class FirestartersController
   include Protocolist::ControllerAdditions
   
   def explicit_use(target, data)
-    fire :gogogo, :target => target, :data => data
+    fire :gogogo, target: target, data: data
   end
 
   def implicit_use(target)
@@ -19,9 +19,9 @@ end
 
 describe Protocolist::ControllerAdditions do
   let(:controller) { FirestartersController.new }
-  let(:actor) { User.new(:name => 'Bill') }
-  let(:lisa)  { User.new(:name => 'Lisa') }
-  let(:mary)  { User.new(:name => 'Mary') }
+  let(:actor) { User.new(name: 'Bill') }
+  let(:lisa)  { User.new(name: 'Lisa') }
+  let(:mary)  { User.new(name: 'Mary') }
   
   before :each do
     Activity.destroy_all
@@ -85,8 +85,8 @@ describe Protocolist::ControllerAdditions do
       end
 
       FirestartersController.send(:fires, :download, 
-        :only => [:download_report, :download_file, :download_map],
-        :data => lambda {|c| c.params }, :if => 'if condition'
+        only: [:download_report, :download_file, :download_map],
+        data: lambda {|c| c.params }, if: 'if condition'
       )
     end
   end

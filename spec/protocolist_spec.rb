@@ -9,9 +9,9 @@ class Activity < SuperModel::Base
 end
 
 describe Protocolist do
-  let(:actor) { User.new(:name => 'Bill') }
-  let(:another_actor) { User.new(:name => 'Bob') }
-  let(:target) { User.new(:name => 'Mary') }
+  let(:actor) { User.new(name: 'Bill') }
+  let(:another_actor) { User.new(name: 'Bob') }
+  let(:target) { User.new(name: 'Mary') }
   
   before do
     Activity.destroy_all
@@ -43,12 +43,9 @@ describe Protocolist do
   end
 
   it 'should save a complex record' do
-    expect {
-      Protocolist.fire :alarm,
-      :actor  => another_actor,
-      :target => target,
-      :data   => { :foo => :bar }
-    }.to change { Activity.count }.by 1
+    expect do 
+      Protocolist.fire :alarm, actor: another_actor, target: target, data: { foo: :bar }
+    end.to change { Activity.count }.by 1
 
     activity = Activity.last    
     activity.actor.should         == another_actor

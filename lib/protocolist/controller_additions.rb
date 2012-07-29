@@ -25,7 +25,7 @@ module Protocolist
         options_for_fire     = options.except(:if, :unless, :only, :except)
 
         callback_proc = lambda do |controller|
-          controller.fire(activity_type, options_for_fire.merge(:data => data_proc.call(controller)))
+          controller.fire(activity_type, options_for_fire.merge(data: data_proc.call(controller)))
         end
 
         send(:after_filter, callback_proc, options_for_callback)
