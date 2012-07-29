@@ -1,4 +1,5 @@
-#Protocolist [![Build Status](https://secure.travis-ci.org/welldan97/protocolist.png?branch=master)](http://travis-ci.org/welldan97/protocolist) [![Dependency Status](https://gemnasium.com/welldan97/protocolist.png)](https://gemnasium.com/welldan97/protocolist)
+#Protocolist
+[![Build Status](https://secure.travis-ci.org/welldan97/protocolist.png?branch=master)](http://travis-ci.org/welldan97/protocolist) [![Dependency Status](https://gemnasium.com/welldan97/protocolist.png)](https://gemnasium.com/welldan97/protocolist) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/welldan97/protocolist)
 
 Simple activity feeds solution for Rails applications. Gives a flexible way to build activity feeds infrastructure over it.
 
