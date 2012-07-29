@@ -8,35 +8,47 @@ module Protocolist
       source_root File.expand_path("../templates", __FILE__)
 
       def generate_activity_model
-        unless defined?(Mongoid)
-          migration_template "migration.rb", "db/migrate/create_activities"
-          invoke "active_record:model", ['Activity'], :migration => false
-          model_content = <<CONTENT
-  attr_accessible :activity_type, :target, :actor, :data
-  belongs_to :target, :polymorphic => true
-  belongs_to :actor, :polymorphic => true
-  serialize :data
-CONTENT
-          inject_into_class('app/models/activity.rb', 'Activity', model_content) if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
-        else
+        if defined?(Mongoid)
           invoke "mongoid:model", ['Activity']
-          model_content = <<CONTENT
+          inject_into_file('app/models/activity.rb', mongoid_model_contents, :after => "include Mongoid::Document\n") if model_exists?
+        else
+          migration_template "migration.rb", "db/migrate/create_activities"
 
-  belongs_to :actor,  polymorphic: true
-  belongs_to :target, polymorphic: true
-
-  field :activity_type, type: String
-  field :data, type: Hash
-
-CONTENT
-          inject_into_file('app/models/activity.rb', model_content, :after => "include Mongoid::Document\n") if File.exists?(File.join(destination_root, 'app/models/activity.rb'))
-
+          invoke "active_record:model", ['Activity'], :migration => false
+          inject_into_class('app/models/activity.rb', 'Activity', active_record_model_contents) if model_exists?
         end
-
       end
 
       def self.next_migration_number(dirname) #:nodoc:
         ActiveRecord::Generators::Base.next_migration_number(dirname)
+      end
+
+      private
+
+      def model_exists?
+        File.exists?(File.join(destination_root, 'app/models/activity.rb'))
+      end
+
+      def mongoid_model_contents
+<<CONTENTS
+
+  belongs_to :actor,  :polymorphic => true
+  belongs_to :target, :polymorphic => true
+
+  field :activity_type, :type => String
+  field :data, :type => Hash
+CONTENTS
+      end
+
+      def active_record_model_contents
+<<CONTENTS
+  attr_accessible :activity_type, :target, :actor, :data
+
+  belongs_to :target, :polymorphic => true
+  belongs_to :actor, :polymorphic => true
+
+  serialize :data
+CONTENTS
       end
     end
   end
