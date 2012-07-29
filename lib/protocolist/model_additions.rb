@@ -1,6 +1,9 @@
+require 'protocolist/util/data_proc'
+
 module Protocolist
   module ModelAdditions
     extend ActiveSupport::Concern
+    include Util::DataProc
     
     def fire(activity_type, options={})
       options[:target] = self if options[:target] == nil
@@ -23,18 +26,6 @@ module Protocolist
 
         fires_on.each do |on|
           send("after_#{on}", callback_proc, options_for_callback)
-        end
-      end
-      
-      private
-      
-      def extract_data_proc(data)
-        if data.respond_to? :call
-          lambda {|record| data.call record }
-        elsif data.is_a? Symbol
-          lambda {|record| record.send data }
-        else
-          lambda {|record| data }
         end
       end
     end
