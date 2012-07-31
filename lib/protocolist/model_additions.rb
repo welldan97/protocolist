@@ -4,14 +4,22 @@ module Protocolist
   module ModelAdditions
     extend ActiveSupport::Concern
     include Util::DataProc
-    
+
     def fire(activity_type, options = {})
-      options[:target] = self if options[:target] == nil
-      options[:target] = nil  if options[:target] == false
+      target = case options[:target]
+               when nil
+                 self
+               when false
+                 nil
+               else
+                 options[:target]
+               end
+
+      options = options.merge target: target
 
       Protocolist.fire activity_type, options
     end
-    
+
     module ClassMethods
       def fires(activity_type, options = {})
         fires_on  = [*options[:on] || activity_type]
@@ -20,8 +28,10 @@ module Protocolist
         options_for_callback = options.slice(:if, :unless)
         options_for_fire     = options.except(:if, :unless, :on)
 
-        callback_proc = lambda do |record|
-          record.fire(activity_type, options_for_fire.merge(data: data_proc.call(record)))
+        callback_proc = lambda do |record; options|
+          options = options_for_fire.merge data: data_proc.call(record)
+
+          record.fire activity_type, options
         end
 
         fires_on.each do |on|
