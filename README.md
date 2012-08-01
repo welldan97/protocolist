@@ -73,7 +73,7 @@ The most flexible way is to use `fire` method:
 ```ruby
 def destroy_projects
     self.projects.destroy_all
-    fire :destroy_all, target: false, data: {company_id: company_id}
+    fire :destroy_all, target: false, data: { company_id: company_id }
 end
 ```
 
@@ -94,8 +94,8 @@ The customized one:
 
 ```ruby
 fires :download, only: [:download_report, :download_file, :download_map],
-                 data: lambda{|c| c.params[:city] },
-                 if:   lambda{|c| c.response.status == 200 }
+                 data: ->(c) { c.params[:city] },
+                 if:   ->(c) { c.response.status == 200 }
 ```
 
 The `fire` method can be used same way as in models, but also if type is not
@@ -131,6 +131,3 @@ Protocolist was inspired by
 [timeline_fu](https://github.com/jamesgolick/timeline_fu).  I used it,
 but its functionality wasn't enough for me, so I made my own with
 blackjack and stewardesses.
-
-
-

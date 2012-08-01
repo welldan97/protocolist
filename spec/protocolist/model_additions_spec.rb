@@ -49,9 +49,9 @@ end
 describe Protocolist::ModelAdditions do
   let(:actor) { User.new(name: 'Bill') }
   let(:mary) { User.new(name: 'Mary') }
-  
+
   before do
-    Activity.destroy_all  
+    Activity.destroy_all
 
     Protocolist.actor = actor
     Protocolist.activity_class = Activity
@@ -61,7 +61,7 @@ describe Protocolist::ModelAdditions do
     let(:firestarter) { Firestarter.new }
 
     it 'saves record with target and data' do
-      expect { firestarter.love_letter_for_mary(mary, '<3 <3 <3') }.to change{ Activity.count }.by 1
+      expect { firestarter.love_letter_for_mary(mary, '<3 <3 <3') }.to change { Activity.count }.by(1)
 
       activity = Activity.last
       activity.actor.should         == actor
@@ -71,8 +71,8 @@ describe Protocolist::ModelAdditions do
     end
 
     it 'saves record with self as target if target is not set' do
-      expect { firestarter.myself }.to change{ Activity.count }.by 1
-      
+      expect { firestarter.myself }.to change { Activity.count }.by(1)
+
       activity = Activity.last
       activity.actor.should         == actor
       activity.activity_type.should == :myself
@@ -80,8 +80,8 @@ describe Protocolist::ModelAdditions do
     end
 
     it 'saves record without target if target set to false' do
-      expect { firestarter.delete }.to change{ Activity.count }.by 1
-      
+      expect { firestarter.delete }.to change { Activity.count }.by(1)
+
       activity = Activity.last
       activity.actor.should         == actor
       activity.activity_type.should == :delete
@@ -91,8 +91,8 @@ describe Protocolist::ModelAdditions do
 
   describe 'fires callback' do
     it 'saves record when called with minimal options' do
-      expect { SimpleFirestarter.create(name: 'Ted') }.to change{ Activity.count }.by 1
-      
+      expect { SimpleFirestarter.create(name: 'Ted') }.to change { Activity.count }.by(1)
+
       activity = Activity.last
       activity.actor.should         == actor
       activity.activity_type.should == :create
@@ -103,7 +103,7 @@ describe Protocolist::ModelAdditions do
 
       #first create record
 
-      expect { ComplexFirestarter.create(name: 'Ted') }.to change{ Activity.count }.by 1
+      expect { ComplexFirestarter.create(name: 'Ted') }.to change { Activity.count }.by(1)
 
       activity = Activity.last
       activity.actor.should         == actor
@@ -113,7 +113,7 @@ describe Protocolist::ModelAdditions do
 
       #then destroy record
 
-      expect { ComplexFirestarter.last.destroy }.to change{ Activity.count }.by 1
+      expect { ComplexFirestarter.last.destroy }.to change { Activity.count }.by(1)
 
       activity = Activity.last
       activity.actor.should         == actor
@@ -123,13 +123,11 @@ describe Protocolist::ModelAdditions do
     end
 
     it 'saves checks conditions' do
-      expect { ConditionalFirestarter.create(name: 'Ted') }.to change{ Activity.count }.by 1
-      
+      expect { ConditionalFirestarter.create(name: 'Ted') }.to change { Activity.count }.by(1)
+
       activity = Activity.last
       activity.actor.should         == actor
       activity.activity_type.should == :i_will_be_saved
     end
   end
-
-
 end

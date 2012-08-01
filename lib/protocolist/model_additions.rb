@@ -15,23 +15,23 @@ module Protocolist
                  options[:target]
                end
 
-      options = options.merge target: target
+      options = options.merge(target: target)
 
-      Protocolist.fire activity_type, options
+      Protocolist.fire(activity_type, options)
     end
 
     module ClassMethods
       def fires(activity_type, options = {})
         fires_on  = [*options[:on] || activity_type]
-        data_proc = extract_data_proc options[:data]
+        data_proc = extract_data_proc(options[:data])
 
         options_for_callback = options.slice(:if, :unless)
         options_for_fire     = options.except(:if, :unless, :on)
 
-        callback_proc = lambda do |record; options|
-          options = options_for_fire.merge data: data_proc.call(record)
+        callback_proc = ->(record; options) do
+          options = options_for_fire.merge(data: data_proc.call(record))
 
-          record.fire activity_type, options
+          record.fire(activity_type, options)
         end
 
         fires_on.each do |on|

@@ -6,7 +6,7 @@ class FirestartersController
   end
 
   include Protocolist::ControllerAdditions
-  
+
   def explicit_use(target, data)
     fire :gogogo, target: target, data: data
   end
@@ -22,14 +22,14 @@ describe Protocolist::ControllerAdditions do
   let(:actor) { User.new(name: 'Bill') }
   let(:lisa)  { User.new(name: 'Lisa') }
   let(:mary)  { User.new(name: 'Mary') }
-  
+
   before :each do
     Activity.destroy_all
 
-    controller.stub(:current_user).and_return actor
-    controller.stub(:controller_name).and_return 'firestarters'
-    controller.stub(:action_name).and_return 'quick_and_dirty_action_stub'
-    controller.stub(:params).and_return 'les params'
+    controller.stub(:current_user).and_return(actor)
+    controller.stub(:controller_name).and_return('firestarters')
+    controller.stub(:action_name).and_return('quick_and_dirty_action_stub')
+    controller.stub(:params).and_return('les params')
 
     controller.initialize_protocolist
   end
@@ -59,14 +59,14 @@ describe Protocolist::ControllerAdditions do
     it 'saves record when called with minimal options' do
       FirestartersController.should_receive(:after_filter) do |callback_proc, options|
         options[:only].should == :download
-        expect { callback_proc.call(controller) }.to change{ Activity.count }.by 1
-        
+        expect { callback_proc.call(controller) }.to change { Activity.count }.by(1)
+
         activity = Activity.last
         activity.actor.should         == actor
         activity.activity_type.should == :download
         activity.target.should_not be
       end
-      
+
       FirestartersController.send(:fires, :download)
     end
 
@@ -75,7 +75,7 @@ describe Protocolist::ControllerAdditions do
         options[:only].should == [:download_report, :download_file, :download_map]
         options[:if].should   == 'if condition'
 
-        expect { callback_proc.call(controller) }.to change{ Activity.count }.by 1
+        expect { callback_proc.call(controller) }.to change { Activity.count }.by(1)
 
         activity = Activity.last
         activity.actor.should         == actor
@@ -84,9 +84,9 @@ describe Protocolist::ControllerAdditions do
         activity.target.should_not be
       end
 
-      FirestartersController.send(:fires, :download, 
+      FirestartersController.send(:fires, :download,
         only: [:download_report, :download_file, :download_map],
-        data: lambda {|c| c.params }, if: 'if condition'
+        data: ->(c) { c.params }, if: 'if condition'
       )
     end
   end
