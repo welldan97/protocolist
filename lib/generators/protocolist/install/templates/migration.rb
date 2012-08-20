@@ -4,6 +4,7 @@ class CreateActivities < ActiveRecord::Migration
       t.references :actor,  polymorphic: true
       t.references :target, polymorphic: true
 
+      i.string :ip_adress
       t.string :activity_type
       t.text :data
 
