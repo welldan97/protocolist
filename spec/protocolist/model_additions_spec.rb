@@ -40,6 +40,7 @@ class ComplexFirestarter < SuperModel::Base
   include Protocolist::ModelAdditions
 
   fires :yohoho, on: [:create, :destroy], target: false, data: :hi
+  fires :yohoho, on: :update, data: 'name * 2'
 
   def hi
     'Hi!'
@@ -120,6 +121,14 @@ describe Protocolist::ModelAdditions do
       activity.activity_type.should == :yohoho
       activity.target.should_not be
       activity.data.should == 'Hi!'
+    end
+
+    it 'saves record with string data attribute parsed' do
+      ComplexFirestarter.create(name: 'Ted')
+      ComplexFirestarter.last.update_attributes name: 'Bob'
+
+      activity = Activity.last
+      activity.data.should == 'BobBob'
     end
 
     it 'saves checks conditions' do

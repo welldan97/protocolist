@@ -11,6 +11,8 @@ module Protocolist
             ->(o) { data.call(o) }
           elsif data.is_a?(Symbol)
             ->(o) { o.send(data) }
+          elsif data.is_a?(String)
+            ->(o) { o.instance_eval "(#{data})" }
           else
             ->(_) { data }
           end

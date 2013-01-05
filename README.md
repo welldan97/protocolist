@@ -57,7 +57,7 @@ fires :edit, on:   :update,
              if:   'changes.any?'
 ```
 
-The event type will be `edit`. A proc, symbol a̶n̶d̶ ̶a̶ ̶s̶t̶r̶i̶n̶g̶ for data
+The event type will be `edit`. A proc, symbol and a string for data
 option represent a method, else types will be stored as is.
 
 The `unless` option also can be passed.
