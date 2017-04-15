@@ -30,6 +30,9 @@ describe Protocolist::ControllerAdditions do
     controller.stub(:controller_name).and_return('firestarters')
     controller.stub(:action_name).and_return('quick_and_dirty_action_stub')
     controller.stub(:params).and_return('les params')
+    request = Object.new
+    request.stub!(:remote_ip).and_return("1.2.3.4")
+    controller.stub(:request).and_return(request)
 
     controller.initialize_protocolist
   end
@@ -88,6 +91,17 @@ describe Protocolist::ControllerAdditions do
         only: [:download_report, :download_file, :download_map],
         data: ->(c) { c.params }, if: 'if condition'
       )
+    end
+
+    it 'saves the ip address' do
+      FirestartersController.should_receive(:after_filter) do |callback_proc, options|
+        options[:only].should == :download
+        expect { callback_proc.call(controller) }.to change { Activity.count }.by(1)
+        activity = Activity.last
+        activity.ip_address.should eql "1.2.3.4"
+      end
+
+      FirestartersController.send(:fires, :download)
     end
   end
 end
