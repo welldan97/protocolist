@@ -46,7 +46,7 @@ module Protocolist
 
       def generate_active_record_activity_model
         content = <<-CONTENT.gsub(/^ +/, '  ')
-          attr_accessible :activity_type, :target, :actor, :data
+          attr_accessible :activity_type, :target, :actor, :data, :ip_address
 
           belongs_to :target, polymorphic: true
           belongs_to :actor,  polymorphic: true
